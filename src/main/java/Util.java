@@ -1,3 +1,6 @@
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 class Util {
 
     private static final String HASH_ALGORITHM = "SHA-256";
+    private static Moshi moshi = new Moshi.Builder().build();
 
     static String getFileHash(File fileIn) {
         try {
@@ -61,6 +65,19 @@ class Util {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    static ScanResult jsonToScanResult(String jsonResponse) {
+        System.out.println("JSON: " + jsonResponse);
+        JsonAdapter<ScanResult> scanResultJsonAdapter = moshi.adapter(ScanResult.class);
+        try {
+            ScanResult scanResult = scanResultJsonAdapter.fromJson(jsonResponse);
+            System.out.println(scanResult);
+            return scanResult;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

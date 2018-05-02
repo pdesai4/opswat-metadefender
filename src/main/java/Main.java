@@ -19,5 +19,12 @@ public class Main {
         }
         String fileHash = Util.getFileHash(fileIn);
         System.out.println(fileHash);
+        try {
+            NetworkManager networkManager = new NetworkManagerImpl();
+            ScanResult scanResult = networkManager.scanFile(fileIn);
+            System.out.println(scanResult);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
