@@ -57,4 +57,31 @@ public class NetworkManagerImpl implements NetworkManager {
         return null;
     }
 
+    public ScanHashResult performFileHashLookup(String fileHash) {
+        Request request = new Request.Builder()
+                .url(BASE_URL+ "/hash/" + fileHash)
+                .header("apikey", API_KEY)
+                .build();
+
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                System.err.println("Request " + request.url() + " failed with status code: " + response.code());
+                return null;
+            }
+            if(response.code() == 200 || response.code() == 203) {
+                ResponseBody body = response.body();
+                if (body != null) {
+                    return Util.scanHashResult(body.string());
+                }
+            } else {
+                return null;
+            }
+
+        } catch (IOException e) {
+            System.err.println("Request " + request.url() + " failed with with IO error");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

@@ -5,4 +5,5 @@ import java.io.File;
  */
 public interface NetworkManager {
     ScanResult scanFile(File fileIn);
+    ScanHashResult performFileHashLookup(String fileHash);
 }

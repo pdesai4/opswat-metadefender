@@ -69,12 +69,23 @@ class Util {
     }
 
     static ScanResult jsonToScanResult(String jsonResponse) {
-        System.out.println("JSON: " + jsonResponse);
         JsonAdapter<ScanResult> scanResultJsonAdapter = moshi.adapter(ScanResult.class);
         try {
             ScanResult scanResult = scanResultJsonAdapter.fromJson(jsonResponse);
             System.out.println(scanResult);
             return scanResult;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    static ScanHashResult scanHashResult(String jsonResponse) {
+        JsonAdapter<ScanHashResult> scanHashResultJsonAdapter = moshi.adapter(ScanHashResult.class);
+        try {
+            ScanHashResult scanHashResult = scanHashResultJsonAdapter.fromJson(jsonResponse);
+            System.out.println(scanHashResult);
+            return scanHashResult;
         } catch (IOException e) {
             e.printStackTrace();
         }
