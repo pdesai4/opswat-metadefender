@@ -11,40 +11,49 @@ public class Main {
             System.exit(1);
         }
 
-        // 1. Calculate the hash of the given samplefile.txt
+        // 1. Calculate the hash of the given file
         String filePath = args[0];
-        File fileIn = new File(filePath);
-        if (!fileIn.exists() || !fileIn.isFile()) {
+        File inputFile = new File(filePath);
+        if (!inputFile.exists() || !inputFile.isFile()) {
             System.err.println("Invalid file path. Enter file path in the format \"/path/to/file\" ");
             System.exit(1);
         }
-        String fileHash = Util.getFileHash(fileIn);
+        String fileHash = Util.getFileHash(inputFile);
+
+        NetworkManager networkManager = new NetworkManagerImpl();
 
         // 2. Perform a hash lookup against metadefender.opswat.com and see if their are previously cached results for the file
-        NetworkManager networkManager = new NetworkManagerImpl();
         ScanHashResult lookupResult = networkManager.performFileHashLookup(fileHash);
-        System.out.println(lookupResult);
-
 
         // 3. If results found then skip to 6
-
-        // 4. If results not found then upload the file, receive a data_id
-        if(lookupResult == null) {
-            // Scanning a file by file upload
-            try {
-                ScanResult scanResult = networkManager.scanFile(fileIn);
-                System.out.println(scanResult);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        // 5. Repeatedly pull on the data_id to retrieve results
-
-        // 6. Display results in format below
         if (lookupResult != null) {
             lookupResult.printInFormat();
+        } else {
+            // 4. If results not found then upload the file, receive a data_id
+            boolean scanComplete;
+            ScanResult scanResult = networkManager.scanFile(inputFile);
+            System.out.println(scanResult);
+
+            // 5. Repeatedly pull on the data_id to retrieve results
+            int maxWaitTimeInSeconds = 10, elapsedWaitTime = 0;
+            do {
+                lookupResult = networkManager.retrieveScanProgress(scanResult.data_id);
+                System.out.println("Progress = " + lookupResult.scan_results.progress_percentage);
+                scanComplete = (lookupResult.scan_results.progress_percentage == 100);
+                try {
+                    Thread.sleep(1000);
+                    elapsedWaitTime++;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } while (!scanComplete && elapsedWaitTime < maxWaitTimeInSeconds);
+
+            // 6. Display results in format below
+            if (scanComplete) {
+                lookupResult.printInFormat();
+            } else {
+                System.err.println("Scan timeout!");
+            }
         }
     }
-    
 }

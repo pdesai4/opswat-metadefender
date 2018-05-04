@@ -91,4 +91,16 @@ class Util {
         }
         return null;
     }
+
+    static ScanHashResult retrieveScanProgress(String jsonResponse) {
+        JsonAdapter<ScanHashResult> scanProgressJsonAdapter = moshi.adapter(ScanHashResult.class);
+        try {
+            ScanHashResult scanProgress = scanProgressJsonAdapter.fromJson(jsonResponse);
+            System.out.println(scanProgress);
+            return scanProgress;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

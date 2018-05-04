@@ -4,15 +4,16 @@ import java.util.Map;
  * Created by Priyanka Desai
  */
 public class ScanHashResult {
-    private String file_id;
-    private String data_id;
-    private boolean archived;
-    private ProcessInfo process_info;
-    private ScanResults scan_results;
-    private FileInfo file_info;
-    private int top_threat;
-    private int share_file;
-    private int rest_version;
+    String file_id;
+    String data_id;
+    boolean archived;
+    ProcessInfo process_info;
+    ScanResults scan_results;
+    FileInfo file_info;
+    int top_threat;
+    int share_file;
+    int rest_version;
+
 
     @Override
     public String toString() {
