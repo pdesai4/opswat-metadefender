@@ -90,9 +90,7 @@ class Util {
     static ScanResult jsonToScanResult(String jsonResponse) {
         JsonAdapter<ScanResult> scanResultJsonAdapter = moshi.adapter(ScanResult.class);
         try {
-            ScanResult scanResult = scanResultJsonAdapter.fromJson(jsonResponse);
-            System.out.println(scanResult);
-            return scanResult;
+            return scanResultJsonAdapter.fromJson(jsonResponse);
         } catch (IOException e) {
             e.printStackTrace();
         }
