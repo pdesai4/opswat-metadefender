@@ -39,7 +39,7 @@ public class Main {
             ScanResult scanResult = networkManager.scanFile(inputFile);
 
             // 5. Repeatedly pull on the data_id to retrieve results
-            int maxWaitTimeInSeconds = 10, elapsedWaitTime = 0;
+            int maxWaitTimeInSeconds = 60, elapsedWaitTime = 0;
 
             // Get progress percentage status
             do {
