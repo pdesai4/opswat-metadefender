@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 
 /**
  * Created by Priyanka Desai
@@ -6,6 +8,9 @@ import java.io.File;
 public class Main {
 
     public static void main(String[] args) {
+        // 0. Read the API key value
+        String apiKey = readApiKey();
+
         if (args.length < 1) {
             System.err.println("Invalid number of arguments");
             System.exit(1);
@@ -20,7 +25,7 @@ public class Main {
         }
         String fileHash = Util.getFileHash(inputFile);
 
-        NetworkManager networkManager = new NetworkManagerImpl();
+        NetworkManager networkManager = new NetworkManagerImpl(apiKey);
 
         // 2. Perform a hash lookup against metadefender.opswat.com and see if their are previously cached results for the file
         ScanHashResult lookupResult = networkManager.performFileHashLookup(fileHash);
@@ -55,5 +60,23 @@ public class Main {
                 System.err.println("Scan timeout");
             }
         }
+    }
+
+    private static String readApiKey() {
+        String apiKey = "";
+        try {
+            FileReader fileReader = new FileReader("api-key.txt");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            apiKey = bufferedReader.readLine();
+            bufferedReader.close();
+            fileReader.close();
+        } catch (Exception e) {
+            System.err.println("Error reading api-key.txt");
+            System.err.println("Make sure that you have api-key.txt file in root directory " +
+                    "with your api key as its content without any whitespaces");
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return apiKey;
     }
 }

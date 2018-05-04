@@ -15,13 +15,13 @@ import java.io.IOException;
 public class NetworkManagerImpl implements NetworkManager {
 
     private static final String BASE_URL = "https://api.metadefender.com/v2";
-    private static final String API_KEY = "api_key";
     private static final MediaType MEDIA_TYPE = MediaType.parse("application/octet-stream");
-
+    private String apiKey = "apiKey";
     private OkHttpClient okHttpClient;
 
-    NetworkManagerImpl() {
+    NetworkManagerImpl(String apiKeyIn) {
         okHttpClient = new OkHttpClient();
+        apiKey = apiKeyIn;
     }
 
     /**
@@ -33,7 +33,7 @@ public class NetworkManagerImpl implements NetworkManager {
     public ScanHashResult performFileHashLookup(String fileHash) {
         Request request = new Request.Builder()
                 .url(BASE_URL + "/hash/" + fileHash)
-                .header("apikey", API_KEY)
+                .header("apikey", apiKey)
                 .build();
 
         try (Response response = okHttpClient.newCall(request).execute()) {
@@ -72,7 +72,7 @@ public class NetworkManagerImpl implements NetworkManager {
 
         Request request = new Request.Builder()
                 .url(BASE_URL + "/file")
-                .header("apikey", API_KEY)
+                .header("apikey", apiKey)
                 .header("filename", fileIn.getName())
                 .post(requestBody)
                 .build();
@@ -104,7 +104,7 @@ public class NetworkManagerImpl implements NetworkManager {
     public ScanHashResult retrieveScanProgress(String data_id) {
         Request request = new Request.Builder()
                 .url(BASE_URL + "/file/" + data_id)
-                .header("apikey", API_KEY)
+                .header("apikey", apiKey)
                 .build();
 
         try (Response response = okHttpClient.newCall(request).execute()) {
