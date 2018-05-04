@@ -32,13 +32,13 @@ public class Main {
             // 4. If results not found then upload the file, receive a data_id
             boolean scanComplete;
             ScanResult scanResult = networkManager.scanFile(inputFile);
-            System.out.println(scanResult);
 
             // 5. Repeatedly pull on the data_id to retrieve results
             int maxWaitTimeInSeconds = 10, elapsedWaitTime = 0;
+
+            // Get progress percentage status
             do {
                 lookupResult = networkManager.retrieveScanProgress(scanResult.data_id);
-                System.out.println("Progress = " + lookupResult.scan_results.progress_percentage);
                 scanComplete = (lookupResult.scan_results.progress_percentage == 100);
                 try {
                     Thread.sleep(1000);
@@ -52,7 +52,7 @@ public class Main {
             if (scanComplete) {
                 lookupResult.printInFormat();
             } else {
-                System.err.println("Scan timeout!");
+                System.err.println("Scan timeout");
             }
         }
     }

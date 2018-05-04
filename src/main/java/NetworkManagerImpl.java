@@ -24,6 +24,12 @@ public class NetworkManagerImpl implements NetworkManager {
         okHttpClient = new OkHttpClient();
     }
 
+    /**
+     * Retrieving scan reports using a data hash
+     *
+     * @param fileHash SHA-256 of the file
+     * @return {@link ScanHashResult} object
+     */
     public ScanHashResult performFileHashLookup(String fileHash) {
         Request request = new Request.Builder()
                 .url(BASE_URL + "/hash/" + fileHash)
@@ -52,6 +58,12 @@ public class NetworkManagerImpl implements NetworkManager {
         return null;
     }
 
+    /**
+     * Scanning a file by file upload
+     *
+     * @param fileIn File to be scanned
+     * @return {@link ScanResult} object
+     */
     public ScanResult scanFile(File fileIn) {
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -83,6 +95,12 @@ public class NetworkManagerImpl implements NetworkManager {
         return null;
     }
 
+    /**
+     * Retrieve scan reports using data_id
+     *
+     * @param data_id The dataId received on upload
+     * @return {@link ScanHashResult} object
+     */
     public ScanHashResult retrieveScanProgress(String data_id) {
         Request request = new Request.Builder()
                 .url(BASE_URL + "/file/" + data_id)

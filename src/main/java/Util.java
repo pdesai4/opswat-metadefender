@@ -16,6 +16,12 @@ class Util {
     private static final String HASH_ALGORITHM = "SHA-256";
     private static Moshi moshi = new Moshi.Builder().build();
 
+    /**
+     * Calculate SHA-256 of the given file
+     *
+     * @param fileIn Input file
+     * @return SHA-256 of the given file
+     */
     static String getFileHash(File fileIn) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(HASH_ALGORITHM);
@@ -27,7 +33,14 @@ class Util {
         return null;
     }
 
-    // Referred from https://howtodoinjava.com/core-java/io/how-to-generate-sha-or-md5-file-checksum-hash-in-java/
+    /**
+     * Generate checksum hash of the given file
+     * // Referred from https://howtodoinjava.com/core-java/io/how-to-generate-sha-or-md5-file-checksum-hash-in-java/
+     *
+     * @param digest {@link MessageDigest} object
+     * @param file   Input file whose SHA-256 is to be calculated
+     * @return SHA-256 of the input file
+     */
     private static String getFileChecksum(MessageDigest digest, File file) {
         // Get file input stream for reading the file content
         FileInputStream fis;
@@ -50,13 +63,13 @@ class Util {
 
             // This bytes[] has bytes in decimal format;
             // Convert it to hexadecimal format
-            StringBuilder sb = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             for (byte aByte : bytes) {
-                sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
+                stringBuilder.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
             }
 
             // Return complete hash
-            return sb.toString();
+            return stringBuilder.toString();
         } catch (FileNotFoundException e) {
             System.err.println("Invalid file path");
             e.printStackTrace();
@@ -68,6 +81,12 @@ class Util {
         return null;
     }
 
+    /**
+     * Convert the json response string to {@link ScanResult} object
+     *
+     * @param jsonResponse Json response in {@link String} format
+     * @return {@link ScanResult} object
+     */
     static ScanResult jsonToScanResult(String jsonResponse) {
         JsonAdapter<ScanResult> scanResultJsonAdapter = moshi.adapter(ScanResult.class);
         try {
@@ -80,24 +99,32 @@ class Util {
         return null;
     }
 
+    /**
+     * Convert the json response to {@link ScanHashResult} object
+     *
+     * @param jsonResponse Json response in {@link String} format
+     * @return {@link ScanHashResult} object
+     */
     static ScanHashResult scanHashResult(String jsonResponse) {
         JsonAdapter<ScanHashResult> scanHashResultJsonAdapter = moshi.adapter(ScanHashResult.class);
         try {
-            ScanHashResult scanHashResult = scanHashResultJsonAdapter.fromJson(jsonResponse);
-            System.out.println(scanHashResult);
-            return scanHashResult;
+            return scanHashResultJsonAdapter.fromJson(jsonResponse);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    /**
+     * Convert the json response to {@link ScanHashResult} object
+     *
+     * @param jsonResponse Json response in {@link String} format
+     * @return {@link ScanHashResult} object
+     */
     static ScanHashResult retrieveScanProgress(String jsonResponse) {
         JsonAdapter<ScanHashResult> scanProgressJsonAdapter = moshi.adapter(ScanHashResult.class);
         try {
-            ScanHashResult scanProgress = scanProgressJsonAdapter.fromJson(jsonResponse);
-            System.out.println(scanProgress);
-            return scanProgress;
+            return scanProgressJsonAdapter.fromJson(jsonResponse);
         } catch (IOException e) {
             e.printStackTrace();
         }
